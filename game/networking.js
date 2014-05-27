@@ -18,6 +18,6 @@ function postJSON(URL,payload) {
 	var result = null;
 	$.post(URL, payload, function(response) {
 		animationStack = response;
-		alert();
+		
 	});
 }

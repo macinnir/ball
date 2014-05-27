@@ -1,28 +1,40 @@
 var animFlag;
 var r = 2;
 var p1 = new Point(500,500);
-var animationStack = []
-var tmpStack = []
-var c = null
+var animationStack = [];
+var tmpStack = [];
+var c = null;
+var rect = null;
+var config = {};
+var users = [];
+var index = 0;
+var ctx = null;
 // basic init function on load
 window.onload = function () {
 	c = document.getElementById("gameBox");
-	c.addEventListener("mousedown", addBall, false);
-	c.addEventListener("mousemove", followMouse, false);
-	var ctx= c.getContext("2d");
-	var p1 = new Point(500,500);
-	var p2 = new Point(0,0)
-	animationStack = getJSON("http://localhost:8080/test.json")
-	animFlag = setInterval(function() {draw(ctx)}, 25)
+	ctx = c.getContext("2d");
+	rect = c.getBoundingClientRect();
+	config.height = c.height;
+	config.width = c.width;
+	config.mobileBallSize = 40;
+	config.immobileBallSize = 50;
+	config.immobileBallNum = 3;
+	config.user1 = new User("u1",1);
+	config.user2 = new User("u2",2);
+	users.push(config.user1);
+	users.push(config.user2);
+	loadUser();
+	c.addEventListener("mousedown", fixBall, false);
+	c.addEventListener("mousemove", followMouseBall, false);
 
-	// load the temp stack up with temp circles which are off the canvas
-	for (var i = 0; i < 3; i++) {
-		tmpStack.push(new Ball(-10000,-10000,40))
-	}
+	animFlag = setInterval(function() {draw(ctx)}, 25);
+	
+
 }
 // main drawing function
 function draw(ctx) {
 	ctx.clearRect(0,0,c.width,c.height)
+
 	// draw persistant animationStack
 	for (var i = 0; i < animationStack.length; i++) {
 		switch (animationStack[i].kind) {
@@ -35,20 +47,17 @@ function draw(ctx) {
 		} 
 		
 	};
-	// draw persistant animationStack
-	for (var i = 0; i < tmpStack.length; i++) {
-		switch (tmpStack[i].kind) {
-			case "line":
-				drawLine(tmpStack[i].start, tmpStack[i].end, ctx);
-				break; 
-			case "ball":
-				drawCircle(tmpStack[i].position,tmpStack[i].radius, ctx)
-				
-		} 
+	// draw tmp animationStack
+	
+	switch (tmpStack[0].kind) {
+		case "line":
+			drawLine(tmpStack[0].start, tmpStack[0].end, ctx);
+			break; 
+		case "ball":
+			drawCircle(tmpStack[0].position,tmpStack[0].radius, ctx)
+			
+	} 
 		
-	};
-
-
 
 }
 
@@ -78,10 +87,11 @@ function Point (x,y) {
 	this.y = y;
 }
 // Create a new ball at x,y with radius r
-function Ball(x,y,r) {
-	this.position = new Point(x,y)
-	this.radius = r
-	this.kind = "ball"
+function Ball(x,y,r,u) {
+	this.position = new Point(x,y);
+	this.radius = r;
+	this.kind = "ball";
+	this.owner = u;
 }
 // Create a new line at p1 going to p2
 function Line(start,end) {
@@ -89,45 +99,73 @@ function Line(start,end) {
 	this.end = end;
 	this.kind = "line"
 }
-
+// Create a new User and return it
+function User(name, side) {
+	this.side = side;
+	this.name = name;
+	this.ballVector = new Line(new Point((config.width/3)*side, config.height/2), new Point(0,0));
+	this.score = 0;
+	this.mobileBalls = new Ball(-1000,-1000,config.mobileBallSize, name);
+	this.immobileBalls = [];
+	for (var i = 0; i < config.immobileBallNum; i++) {
+		this.immobileBalls.push(new Ball(-1000,-1000,config.immobileBallSize, name));
+	};
+}
 
 // follow the mouse around with a ball if there is a ball in the tmpStack
-function followMouse(event) {
-	if (tmpStack.length > 0 ) {
-		tmpStack[tmpStack.length -1].position = {x:event.clientX, y:event.clientY}
+function followMouseBall(event) {
+	if (tmpStack.length > 1 ) {
+		tmpStack[0].position = {x:getXMouse(event), y:getYMouse(event)}
 	} else {
-		c.removeEventListener("mousedown", addBall);
-		c.removeEventListener("mousemove", followMouse);
-		c.addEventListener("mousedown", fixEndPoint, false);
-		c.addEventListener("mousemove", followEndpoint, false);
-		tmpStack.push(new Line(new Point(100,100), new Point(100,100)))
+		c.removeEventListener("mousedown", fixBall);
+		c.removeEventListener("mousemove", followMouseBall);
+		c.addEventListener("mousedown", fixMouseEndPoint, false);
+		c.addEventListener("mousemove", followMouseEndpoint, false);
 	}
 }
 
+
 // pop the top ball from the tmpStack and push it on to the animationStack
-function addBall(event) {
-	if (tmpStack.length > 0) {
-		animationStack.push(tmpStack.pop());
-	}
+function fixBall(event) {
+	console.log(JSON.stringify(tmpStack));
+	if (tmpStack.length > 1) {
+		animationStack.push(tmpStack.shift());
+	} 
 	
 }
 
 // follow the mouse with a line instead of a ball
-function followEndpoint(event) {
+function followMouseEndpoint(event) {
 	if (tmpStack.length > 0) {
 		tmpStack[0].end = {x:event.clientX, y:event.clientY};
 	}
 }
 
 // fix endpoint of line
-function fixEndPoint(event) {
+function fixMouseEndPoint(event) {
 	animationStack.push(tmpStack.pop());
-	submit();
+	if (index < users.length) {
+		loadUser();
+	} else {
+		submit();
+	}
 }
 
-// submit animationStack to api
-function submit() {
-	c.removeEventListener("mousedown", fixEndPoint);
-	c.removeEventListener("mousemove", followEndpoint);
-	postJSON("submit",JSON.stringify(animationStack));
+
+// return x position of mouse in canvas
+function getXMouse(event) {
+	return event.clientX - rect.left;
+}
+// return y position of mouse in canvas
+function getYMouse(event) {
+	return event.clientY - rect.top;
+}
+// load a users into the tmpStack
+function loadUser() {
+	u = users[index];
+	for (var i = 0; i < u.immobileBalls.length; i++) {
+		tmpStack.push(u.immobileBalls[i]);
+	};
+	tmpStack.push(u.ballVector);
+	index +=1;
 }
