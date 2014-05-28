@@ -16,7 +16,7 @@ func Submit(w http.ResponseWriter, req *http.Request) {
 	}
 	log.Println(string(body))
 	w.Header().Set("Content-Type", "application/json")
-	io.WriteString(w, `[{"start":{"x":682.6666666666666,"y":384},"end":{"x":875,"y":344},"kind":"line"}]`)
+	io.WriteString(w, `[[{"start":{"x":682.6666666666666,"y":384},"end":{"x":875,"y":344},"kind":"line"}]]`)
 }
 
 func main() {

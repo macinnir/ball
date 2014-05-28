@@ -9,6 +9,7 @@ var config = {};
 var users = [];
 var index = 0;
 var ctx = null;
+var animationMode = 0
 // basic init function on load
 window.onload = function () {
 	c = document.getElementById("gameBox");
@@ -31,25 +32,43 @@ window.onload = function () {
 // main drawing function
 function draw(ctx) {
 	ctx.clearRect(0,0,c.width,c.height)
-	// draw persistant animationStack
-	for (var i = 0; i < animationStack.length; i++) {
-		switch (animationStack[i].kind) {
-			case "line":
-				drawLine(animationStack[i].start, animationStack[i].end, ctx);
-				break; 
-			case "ball":
-				drawCircle(animationStack[i].position,animationStack[i].radius, ctx)		
-		} 
-	};
-	// draw tmp animationStack
-	if (tmpStack.length > 0 ) {
-		switch (tmpStack[0].kind) {
-			case "line":
-				drawLine(tmpStack[0].start, tmpStack[0].end, ctx);
-				break; 
-			case "ball":
-				drawCircle(tmpStack[0].position,tmpStack[0].radius, ctx)
+	// animationMode == 0 == single frame animation
+	if (animationMode == 0 ) {
+		for (var i = 0; i < animationStack.length; i++) {
+			switch (animationStack[i].kind) {
+				case "line":
+					drawLine(animationStack[i].start, animationStack[i].end, ctx);
+					break; 
+				case "ball":
+					drawCircle(animationStack[i].position,animationStack[i].radius, ctx)		
+			} 
+		};
+		// draw tmp animationStack
+		if (tmpStack.length > 0 ) {
+			switch (tmpStack[0].kind) {
+				case "line":
+					drawLine(tmpStack[0].start, tmpStack[0].end, ctx);
+					break; 
+				case "ball":
+					drawCircle(tmpStack[0].position,tmpStack[0].radius, ctx)
 			}	
+		}
+	// multiframe animation
+	} else {
+		for (var i = 0; i < animationStack.length; i++) {
+			animationStack[i]
+			for (var x = 0; x < animationStack[i].length; x++) {
+				switch (animationStack[i][x].kind) {
+					case "line":
+						drawLine(animationStack[i][x].start, animationStack[i][x].end, ctx);
+						break; 
+					case "ball":
+						drawCircle(animationStack[i][x].position,animationStack[i][x].radius, ctx);		
+				}
+			};
+		};
+		alert("done");
+		reset();
 	}
 }
 // Draw a circle at Point p with radius r
@@ -139,6 +158,7 @@ function fixMouseEndPoint(event) {
 		c.addEventListener("mousemove", followMouseBall, false);
 	} else {
 		submit();
+		animationMode = 1;
 	}
 }
 // return x position of mouse in canvas
@@ -157,4 +177,15 @@ function loadUser() {
 	};
 	tmpStack.push(u.ballVector);
 	index +=1;
+}
+
+// reset for a new game
+function reset() {
+	animationMode = 0;
+	animationStack = [];
+	index = 0;
+	c.removeEventListener("mousedown", fixBall);
+	c.removeEventListener("mousemove", followMouseBall);
+	c.addEventListener("mousedown", fixMouseEndPoint, false);
+	c.addEventListener("mousemove", followMouseEndpoint, false);
 }
