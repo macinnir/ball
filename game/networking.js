@@ -21,3 +21,8 @@ function postJSON(URL,payload) {
 		
 	});
 }
+
+// submit animation stack to http interface
+function submit() {
+	postJSON("submit",JSON.stringify(animationStack));
+}

@@ -26,15 +26,11 @@ window.onload = function () {
 	loadUser();
 	c.addEventListener("mousedown", fixBall, false);
 	c.addEventListener("mousemove", followMouseBall, false);
-
 	animFlag = setInterval(function() {draw(ctx)}, 25);
-	
-
 }
 // main drawing function
 function draw(ctx) {
 	ctx.clearRect(0,0,c.width,c.height)
-
 	// draw persistant animationStack
 	for (var i = 0; i < animationStack.length; i++) {
 		switch (animationStack[i].kind) {
@@ -42,25 +38,20 @@ function draw(ctx) {
 				drawLine(animationStack[i].start, animationStack[i].end, ctx);
 				break; 
 			case "ball":
-				drawCircle(animationStack[i].position,animationStack[i].radius, ctx)
-				
+				drawCircle(animationStack[i].position,animationStack[i].radius, ctx)		
 		} 
-		
 	};
 	// draw tmp animationStack
-	
-	switch (tmpStack[0].kind) {
-		case "line":
-			drawLine(tmpStack[0].start, tmpStack[0].end, ctx);
-			break; 
-		case "ball":
-			drawCircle(tmpStack[0].position,tmpStack[0].radius, ctx)
-			
-	} 
-		
-
+	if (tmpStack.length > 0 ) {
+		switch (tmpStack[0].kind) {
+			case "line":
+				drawLine(tmpStack[0].start, tmpStack[0].end, ctx);
+				break; 
+			case "ball":
+				drawCircle(tmpStack[0].position,tmpStack[0].radius, ctx)
+			}	
+	}
 }
-
 // Draw a circle at Point p with radius r
 function drawCircle(p,r,ctx) {
 	ctx.beginPath();
@@ -103,7 +94,8 @@ function Line(start,end) {
 function User(name, side) {
 	this.side = side;
 	this.name = name;
-	this.ballVector = new Line(new Point((config.width/3)*side, config.height/2), new Point(0,0));
+	p = new Point((config.width/3)*side, config.height/2);
+	this.ballVector = new Line(p, p);
 	this.score = 0;
 	this.mobileBalls = new Ball(-1000,-1000,config.mobileBallSize, name);
 	this.immobileBalls = [];
@@ -111,7 +103,6 @@ function User(name, side) {
 		this.immobileBalls.push(new Ball(-1000,-1000,config.immobileBallSize, name));
 	};
 }
-
 // follow the mouse around with a ball if there is a ball in the tmpStack
 function followMouseBall(event) {
 	if (tmpStack.length > 1 ) {
@@ -123,35 +114,33 @@ function followMouseBall(event) {
 		c.addEventListener("mousemove", followMouseEndpoint, false);
 	}
 }
-
-
 // pop the top ball from the tmpStack and push it on to the animationStack
 function fixBall(event) {
 	console.log(JSON.stringify(tmpStack));
 	if (tmpStack.length > 1) {
 		animationStack.push(tmpStack.shift());
-	} 
-	
+	}
 }
 
 // follow the mouse with a line instead of a ball
 function followMouseEndpoint(event) {
 	if (tmpStack.length > 0) {
-		tmpStack[0].end = {x:event.clientX, y:event.clientY};
+		tmpStack[0].end = {x:getXMouse(event), y:getYMouse(event)};
 	}
 }
-
 // fix endpoint of line
 function fixMouseEndPoint(event) {
 	animationStack.push(tmpStack.pop());
 	if (index < users.length) {
 		loadUser();
+		c.removeEventListener("mousedown", fixMouseEndPoint);
+		c.removeEventListener("mousemove", followMouseEndpoint);
+		c.addEventListener("mousedown", fixBall, false);
+		c.addEventListener("mousemove", followMouseBall, false);
 	} else {
 		submit();
 	}
 }
-
-
 // return x position of mouse in canvas
 function getXMouse(event) {
 	return event.clientX - rect.left;
