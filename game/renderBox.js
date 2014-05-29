@@ -103,7 +103,7 @@ function Ball(x,y,r,u) {
 	this.kind = "ball";
 	this.owner = u;
 }
-// Create a new line at p1 going to p2
+// Create a new line from start to end
 function Line(start,end) {
 	this.start = start;
 	this.end = end;
@@ -183,9 +183,11 @@ function loadUser() {
 function reset() {
 	animationMode = 0;
 	animationStack = [];
+	tmpStack = [];
 	index = 0;
-	c.removeEventListener("mousedown", fixBall);
-	c.removeEventListener("mousemove", followMouseBall);
-	c.addEventListener("mousedown", fixMouseEndPoint, false);
-	c.addEventListener("mousemove", followMouseEndpoint, false);
+	c.removeEventListener("mousedown", fixMouseEndPoint);
+	c.removeEventListener("mousemove", followMouseEndpoint);
+	c.addEventListener("mousedown", fixBall, false);
+	c.addEventListener("mousemove", followMouseBall, false);
+	loadUser();
 }
