@@ -9,7 +9,8 @@ var config = {};
 var users = [];
 var index = 0;
 var ctx = null;
-var animationMode = 0
+var animationMode = 0;
+var frameIndex = 0;
 // basic init function on load
 window.onload = function () {
 	c = document.getElementById("gameBox");
@@ -27,7 +28,7 @@ window.onload = function () {
 	loadUser();
 	c.addEventListener("mousedown", fixBall, false);
 	c.addEventListener("mousemove", followMouseBall, false);
-	animFlag = setInterval(function() {draw(ctx)}, 25);
+	animFlag = setInterval(function() {draw(ctx)}, 1000);
 }
 // main drawing function
 function draw(ctx) {
@@ -55,20 +56,25 @@ function draw(ctx) {
 		}
 	// multiframe animation
 	} else {
-		for (var i = 0; i < animationStack.length; i++) {
-			animationStack[i]
-			for (var x = 0; x < animationStack[i].length; x++) {
-				switch (animationStack[i][x].kind) {
+		
+		if (frameIndex < animationStack.length) {
+			for (var x = 0; x < animationStack[frameIndex].length; x++) {
+				switch (animationStack[frameIndex][x].kind) {
 					case "line":
-						drawLine(animationStack[i][x].start, animationStack[i][x].end, ctx);
+						drawLine(animationStack[frameIndex][x].start, animationStack[frameIndex][x].end, ctx);
 						break; 
 					case "ball":
-						drawCircle(animationStack[i][x].position,animationStack[i][x].radius, ctx);		
+						drawCircle(animationStack[frameIndex][x].position,animationStack[frameIndex][x].radius, ctx);		
 				}
 			};
-		};
-		alert("done");
-		reset();
+			frameIndex +=1;
+		} else {
+			alert(JSON.stringify(animationStack));
+			reset();
+		}
+		
+	
+		
 	}
 }
 // Draw a circle at Point p with radius r
