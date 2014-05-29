@@ -188,6 +188,7 @@ function loadUser() {
 // reset for a new game
 function reset() {
 	animationMode = 0;
+	frameIndex = 0;
 	animationStack = [];
 	tmpStack = [];
 	index = 0;
