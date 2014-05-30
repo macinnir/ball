@@ -27,13 +27,13 @@ func (s *Simulator) ListenAndServer() {
 				if s.numWorkers < s.maxWorkers {
 					w := NewWorker(s)
 					w.job = tmp
-					go w.job.run()
+					go w.Run()
 					s.numWorkers += 1
 				} else {
-					// if a new worker cannot be created, block until worker is ready
+					// if a new worker cannot be created, block until a worker is ready
 					w := <-s.workerQueue
 					w.job = tmp
-					go w.job.run()
+					go w.Run()
 				}
 			}
 		// If signal on killChan is recieved, close all channels and return the function.
