@@ -28,7 +28,7 @@ window.onload = function () {
 	loadUser();
 	c.addEventListener("mousedown", fixBall, false);
 	c.addEventListener("mousemove", followMouseBall, false);
-	animFlag = setInterval(function() {draw(ctx)}, 1000);
+	animFlag = setInterval(function() {draw(ctx)}, 15);
 }
 // main drawing function
 function draw(ctx) {
