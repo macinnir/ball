@@ -5,7 +5,13 @@ import (
 )
 
 // CollisionDetector is a Job that determins if there was a collision between two objects.
-type CollisionDetector struct {
-	obj1, obj2     objects.Object
-	resolutionChan chan *Resolution
+type DetectCollision struct {
+	obj1, obj2 objects.Object
+	JobChan    chan *job
+}
+
+func (c *DetectCollision) run() {
+	if c.obj1.Collision(c.obj2) {
+		c.jobChan <- &ResoveCollision{ob1: c.obj1, ob2: c.obj2}
+	}
 }
