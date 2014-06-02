@@ -10,7 +10,7 @@ type DetectCollision struct {
 	JobChan    chan *job
 }
 
-func (c *DetectCollision) run() {
+func (c *DetectCollision) Run() {
 	if c.obj1.Collision(c.obj2) {
 		c.jobChan <- &ResoveCollision{ob1: c.obj1, ob2: c.obj2}
 	}

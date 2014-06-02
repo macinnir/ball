@@ -20,6 +20,6 @@ func (w *Worker) release() {
 
 // Run the job
 func (w *Worker) Run() {
-	w.job.run()
+	w.job.Run()
 	w.release()
 }

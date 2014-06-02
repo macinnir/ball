@@ -10,7 +10,7 @@ type ResoveCollision struct {
 	JobChan    chan *Job
 }
 
-func (r *ResoveCollision) run() {
+func (r *ResoveCollision) Run() {
 }
 
 // ResolveImpulse resolves the impulse of an object
