@@ -1,4 +1,4 @@
-package simulator
+package jobs
 
 import (
 	"github.com/eliothedeman/ball/objects"
