@@ -45,3 +45,13 @@ func NewPoint(x, y float64) *Point {
 	p.Mutex = new(sync.Mutex)
 	return p
 }
+
+// Lock the mutex on the point
+func (p *Point) Lock() {
+	p.Mutex.Lock()
+}
+
+// Unlock the mutex on the point
+func (p *Point) Unlock() {
+	p.Mutex.Unlock()
+}

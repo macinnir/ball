@@ -29,6 +29,9 @@ func (l *Line) Collision(obj2 Object) bool {
 
 // Distance calculates the distance of a point to the nearest point on the line
 func (l *Line) Distance(p *Point) float64 {
+	l.Mutex.Lock()
+	defer l.Mutex.Unlock()
+
 	a := l.Start.Distance(p)
 	b := l.End.Distance(p)
 	c := l.Start.Distance(&l.End)
@@ -41,6 +44,8 @@ func (l *Line) Distance(p *Point) float64 {
 
 // Slope returns the slope of the line
 func (l *Line) Slope() float64 {
+	l.Mutex.Lock()
+	defer l.Mutex.Unlock()
 	return (l.End.Y - l.Start.Y) / (l.End.X - l.Start.X)
 }
 
@@ -49,4 +54,14 @@ func NewLine(s, e *Point) *Line {
 	l := &Line{Start: s, End: e}
 	l.Mutex = new(sync.Mutex)
 	return l
+}
+
+// Lock the mutex on the line
+func (l *Line) Lock() {
+	l.Mutex.Lock()
+}
+
+// Unlock the mutex on the line
+func (l *Line) Unlock() {
+	l.Mutex.Unlock()
 }

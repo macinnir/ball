@@ -33,3 +33,13 @@ func NewBall(p Point, r float64, m float64) *Ball {
 	b.Mutex = new(sync.Mutex)
 	return b
 }
+
+// Lock the mutex on the ball
+func (b *Ball) Lock() {
+	b.Mutex.Lock()
+}
+
+// Unlock the mutex on the ball
+func (b *Ball) Unlock() {
+	b.Mutex.Unlock()
+}
