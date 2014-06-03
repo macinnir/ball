@@ -1,4 +1,4 @@
-
+package jobs
 
 import (
 	"github.com/eliothedeman/ball/objects"
@@ -9,6 +9,7 @@ type DetectCollision struct {
 	obj1, obj2 objects.Object
 	JobChan    chan *job
 }
+
 // Run the collision tetction between the two objects
 func (c *DetectCollision) Run() {
 	if c.obj1.Collision(c.obj2) {
