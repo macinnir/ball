@@ -2,12 +2,14 @@ package objects
 
 import (
 	"math"
+	"sync"
 )
 
 // Line is a struct which represents a line between two points
 type Line struct {
-	Start Point `json:"start"`
-	End   Point `json:"end"`
+	*sync.Mutex
+	Start *Point `json:"start"`
+	End   *Point `json:"end"`
 }
 
 // Collision returns if a line intersects another object
@@ -42,4 +44,9 @@ func (l *Line) Slope() float64 {
 	return (l.End.Y - l.Start.Y) / (l.End.X - l.Start.X)
 }
 
-//
+// NewLine creates and returns a new line between *Points s and e
+func NewLine(s, e *Point) *Line {
+	l := &Line{Start: s, End: e}
+	l.Mutex = new(sync.Mutex)
+	return l
+}

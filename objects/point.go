@@ -2,10 +2,12 @@ package objects
 
 import (
 	"math"
+	"sync"
 )
 
 // Point is the basic structure which gives location to a given object
 type Point struct {
+	*sync.Mutex
 	X float64 `json:"x"`
 	Y float64 `json:"y"`
 }
@@ -35,4 +37,11 @@ func (p *Point) Add(p2 *Point) Point {
 // Sub returns p - p2
 func (p *Point) Sub(p2 *Point) Point {
 	return Point{X: (p.X - p2.X), Y: (p.Y - p2.Y)}
+}
+
+// NewPoint creates and returns a new point
+func NewPoint(x, y float64) *Point {
+	p := &Point{X: x, Y: y}
+	p.Mutex = new(sync.Mutex)
+	return p
 }

@@ -1,8 +1,13 @@
 package objects
 
+import (
+	"sync"
+)
+
 // Ball is a struct which represents a ball in the game
 type Ball struct {
-	Position Point   `json:"position"`
+	*sync.Mutex
+	Position *Point  `json:"position"`
 	Radius   float64 `json:"radius"`
 	Mass     float64 `json:"mass"`
 }
@@ -20,4 +25,11 @@ func (b *Ball) Collision(obj2 Object) bool {
 	default:
 		return false
 	}
+}
+
+// NewBall returns a pointer to a newly created ball
+func NewBall(p Point, r float64, m float64) *Ball {
+	b := &Ball{Position: p, Rasius: r, Mass: m}
+	b.Mutex = new(sync.Mutex)
+	return b
 }
