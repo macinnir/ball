@@ -14,6 +14,9 @@ type Ball struct {
 
 // Collision returns if two objects have collided
 func (b *Ball) Collision(obj2 Object) bool {
+	if b == obj2 {
+		return false
+	}
 	// type switch on the exact type of obj2
 	switch obj2.(type) {
 	case *Ball:
