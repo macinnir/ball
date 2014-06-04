@@ -14,6 +14,9 @@ type Line struct {
 
 // Collision returns if a line intersects another object
 func (l *Line) Collision(obj2 Object) bool {
+	if l == obj2 {
+		return false
+	}
 	// type switch on teh exact type of obj2
 	switch obj2.(type) {
 	case *Ball:
