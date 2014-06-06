@@ -1,0 +1,31 @@
+@font-face {
+    font-family: Awesome;
+    src: url(fonts/brankovic.ttf);
+    font-weight:400;
+}
+
+body { 
+
+	background: #eee; 
+	font-family: Awesome; 
+	color: #000; 
+} 
+
+main { 
+
+	width: 1200px; 
+
+}
+
+canvas { background: #fff; border-radius: 10px; }
+.circle { width: 48px; height: 48px; -webkit-border-radius: 25px; -moz-border-radius: 25px; border-radius: 25px; display: inline-block; border: solid 1px #909090; background: #fff;  }
+header { height: 48px; line-height: 48px; vertical-align: middle; margin-bottom: 10px; }
+header h1 { line-height: 48px; vertical-align: middle; display: inline-block; margin-top: 0px; }
+header .ball1 { background: #99f; }
+header .ball2 { background: #f99; margin-left: -20px; }
+.button { display: inline-block; height: 35px; width: 100px; text-align: middle; line-height: 35px; vertical-align: middle; border: solid 1px #909090; border-radius: 3px; text-align: center; text-decoration: none; color: #444; background: #fff; font-size: 23px; } 
+.button:hover { color: #494; }
+
+nav { float: right; } 
+nav ul, nav ul li { -moz-padding-start: 0px; -webkit-padding-start: 0px; list-style-type: none; }
+nav ul li { margin-bottom: 10px; }

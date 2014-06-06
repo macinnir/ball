@@ -1,26 +1,41 @@
 <!DOCTYPE html>
 <html>
 
-<link href="balls.css" media="all" rel="stylesheet" />
-
-<script src="lib/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8" async defer></script>
-<script type="text/javascript" src="renderBox.js"></script>
-<script src="networking.js" type="text/javascript" charset="utf-8" async defer></script>
-
-
-<script>
-var balls = new Balls({ 
-
-	immobileBallNum : 3
-}); 
-$(document).ready(function(){ 
-	balls.Init(); 
-}); 
-</script>
 <head>
 	<title>Balls, the game</title>
+
+	<link href="/assets/balls.css" media="all" rel="stylesheet" />
+	<script src="lib/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8" async defer></script>
+	<script type="text/javascript" src="renderBox.js"></script>
+	<script src="networking.js" type="text/javascript" charset="utf-8" async defer></script>
+	<script>
+	var balls = new Balls({ 
+		immobileBallNum : 3
+	}); 
+	$(document).ready(function(){ 
+		balls.Init(); 
+	}); 
+	</script>
 </head>
 <body>
-	<canvas id="gameBox" width="1024" height="768" style="border:2px solid black;"></canvas>
+
+	<header>
+
+		<div class="circle ball1"></div>
+		<div class="circle ball2"></div>
+
+		<h1>Balls, the game!</h1>
+	
+	</header>
+	<main>
+		<nav>
+			<ul>
+				<li><a href="javascript:void(0);" class="button">Play</a></li>
+				<li><a href="javascript:void(0);" class="button">Stats</a></li>
+				<li><a href="javascript:void(0);" class="button">Tutorial</a></li>
+			</ul>
+		</nav>
+		<canvas id="gameBox" width="1024" height="768" style="border:2px solid black;"></canvas>
+	</main>
 </body>
 </html>
