@@ -17,12 +17,12 @@ function getJSON(URL) {
 function postJSON(URL,payload) {
 	var result = null;
 	$.post(URL, payload, function(response) {
-		animationStack = response;
+		Balls().animationStack = response;
 		
 	});
 }
 
 // submit animation stack to http interface
 function submit() {
-	postJSON("submit",JSON.stringify(animationStack));
+	postJSON("submit",JSON.stringify(Balls().animationStack));
 }
