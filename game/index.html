@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html>
+<script src="lib/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8" async defer></script>
 <script type="text/javascript" src="renderBox.js"></script>
 <script src="networking.js" type="text/javascript" charset="utf-8" async defer></script>
-<script src="lib/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8" async defer></script>
+<script>
+var balls = new Balls({ 
+
+	immobileBallNum : 3
+}); 
+$(document).ready(function(){ 
+	balls.Init(); 
+}); 
+</script>
 <head>
 	<title>Balls, the game</title>
 </head>
